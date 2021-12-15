@@ -1,25 +1,40 @@
-import logo from './logo.svg';
 import './App.css';
+import Header from './components/Header';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import ProductList from './components/ProductList'
+import Main from './components/Main';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+  const [productListData, setProductListData] = useState([])
+  const [selectedProduct, setSelectedProduct] = useState(0)
+
+  useEffect (() => {
+    const getMyNfts = async () => {
+      const productData = await axios.get(
+        'https://fakestoreapi.com/products'
+       
+      )
+
+      setProductListData(productData.data)
+      
+    }
+    return getMyNfts()
+ }, [])
+
+  return(
+    <div className="app">
+      <Header />
+      {
+        productListData.length > 0 && (
+          <>
+            <Main productListData={productListData} selectedproduct={selectedProduct} />
+            <ProductList productListData={productListData} setSelectedProduct={setSelectedProduct} />
+          </>
+        )
+      }
     </div>
-  );
+  )
 }
 
 export default App;
